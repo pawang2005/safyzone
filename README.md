@@ -4,6 +4,11 @@
 <document_content>
 # Safy Zone 🚨
 
+## Demo Video 🎥
+
+[Watch the demo video on Google Drive](https://drive.google.com/file/d/1OJ3Wib_LoI0Sv_CYLxrp0DmId4ZRjjhp/view?usp=sharing)
+
+
 Safy Zone is a crowdsourced safety map for urban areas, designed to enhance public safety by providing real-time data on incidents and area security. Users can report incidents, view heatmaps of unsafe areas, and evaluate routes based on AI-generated safety scores. The platform also automates the escalation of critical reports to regional police stations, ensuring a swift response to public safety concerns.
 
 ![Safy Zone Logo](images/safy_zone_logo.jpg)

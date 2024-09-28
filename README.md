@@ -1,3 +1,7 @@
+<documents>
+<document index="1">
+<source>README.md</source>
+<document_content>
 # Safy Zone 🚨
 
 Safy Zone is a crowdsourced safety map for urban areas, designed to enhance public safety by providing real-time data on incidents and area security. Users can report incidents, view heatmaps of unsafe areas, and evaluate routes based on AI-generated safety scores. The platform also automates the escalation of critical reports to regional police stations, ensuring a swift response to public safety concerns.
@@ -52,37 +56,42 @@ Clone the repository:
 ```bash
 git clone https://github.com/your-username/safy-zone.git
 cd safy-zone
+```
+
 Install dependencies:
 
-bash
-Copy code
+```bash
 npm install
+```
+
 Set up environment variables: Create a .env file and add the following:
 
-bash
-Copy code
+```bash
 MONGO_URI=<Your MongoDB URI>
 GOOGLE_MAPS_API_KEY=<Your Google Maps API Key>
 GEMINI_API_KEY=<Your Gemini API Key>
 SESSION_SECRET=<Your session secret>
+```
+
 Run the application:
 
-bash
-Copy code
+```bash
 npm start
-Usage 📱
+```
+
+## Usage 📱
 Once the app is running, you can:
 
-Register or log in using Passport.js.
-Report incidents by filling out a form with details and location.
-View a heatmap of your area to understand current safety conditions.
-Check route safety scores for your commute.
-Monitor incident trends through a dynamic chart.
-Support other users' reports, increasing their credibility.
-Receive automatic police alerts for critical incidents.
-Folder Structure 🗂
-bash
-Copy code
+1. Register or log in using Passport.js.
+2. Report incidents by filling out a form with details and location.
+3. View a heatmap of your area to understand current safety conditions.
+4. Check route safety scores for your commute.
+5. Monitor incident trends through a dynamic chart.
+6. Support other users' reports, increasing their credibility.
+7. Receive automatic police alerts for critical incidents.
+
+## Folder Structure 🗂
+```
 safy-zone/
 │
 ├── controllers/         # Request handlers and business logic
@@ -127,21 +136,29 @@ safy-zone/
 ├── middleware.js        # Middleware functions
 ├── package.json         # Project metadata and dependencies
 └── server.js            # Server entry point
-APIs Used 🌐
-Google Maps API: Used for generating heatmaps, route safety scores, and displaying maps.
-Gemini API: Integrated for AI-based analysis of incidents, trends, and safety scoring.
-Future Improvements 📈
-Mobile App Integration: Develop a Flutter-based mobile app for wider accessibility.
-Live Alerts: Push notifications for nearby incidents.
-Multi-Language Support: Expand to include multiple languages to cater to diverse user bases.
-Enhanced AI: Use machine learning to predict potential safety risks in real-time based on historical data.
-Contributing 🤝
+```
+
+## APIs Used 🌐
+- Google Maps API: Used for generating heatmaps, route safety scores, and displaying maps.
+- Gemini API: Integrated for AI-based analysis of incidents, trends, and safety scoring.
+
+## Future Improvements 📈
+- Mobile App Integration: Develop a Flutter-based mobile app for wider accessibility.
+- Live Alerts: Push notifications for nearby incidents.
+- Multi-Language Support: Expand to include multiple languages to cater to diverse user bases.
+- Enhanced AI: Use machine learning to predict potential safety risks in real-time based on historical data.
+
+## Contributing 🤝
 Contributions are welcome! Please feel free to submit a Pull Request or open an issue if you have suggestions for new features or bug fixes.
 
-Fork the repository.
-Create your feature branch (git checkout -b feature/YourFeature).
-Commit your changes (git commit -m 'Add some feature').
-Push to the branch (git push origin feature/YourFeature).
-Open a Pull Request.
-Contact 📧
+1. Fork the repository.
+2. Create your feature branch (`git checkout -b feature/YourFeature`).
+3. Commit your changes (`git commit -m 'Add some feature'`).
+4. Push to the branch (`git push origin feature/YourFeature`).
+5. Open a Pull Request.
+
+## Contact 📧
 If you have any questions or feedback, feel free to reach out at sachin.apwig@gmail.com.
+</document_content>
+</document>
+</documents>

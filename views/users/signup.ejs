@@ -1,0 +1,63 @@
+<% layout("/layouts/boilerplate") %>
+<style>
+    .pass{
+        display: flex;
+    }
+    #check{
+    display: none;
+   }
+</style>
+<body>
+    <% if (errmsg && errmsg.length) { %>
+        <div class="col-6 offset-3 alert alert-warning alert-dismissible fade show" role="alert">
+              <strong>Message ,</strong> <%= errmsg %>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div><% } %>  
+<div class="row mt-3"><br>
+    <h3 class="col-6 offset-3 mt-4"><b>SIGNUP</b></h3><br><br><br>
+    <div class="col-6 offset-3">
+        
+        <form method="POST" action="/signup" novalidate class="needs-validation">
+           <div clas="mb-3">
+            <label for="username" class="form-label"><strong>Username:</strong></label>
+            <input id="username" name="username" placeholder="Enter username"  class="form-control" required /><br>
+            <div  class="invalid-feedback">Please enter Username</div><br>
+           </div>
+           <div clas="mb-3">
+            <label for="email" class="form-label"><strong>Email:</strong></label>
+            <input id="email" name="email" placeholder="Enter email"  class="form-control" required /><br>
+            <div  class="invalid-feedback">Please enter Email</div><br>
+           </div> 
+           <div clas="mb-3">
+            <label for="password" class="form-label"><strong>Password:</strong></label>
+            <div class="pass"><input type="password" id="password" name="password" placeholder="Enter password"  class="form-control" required /><input type="checkbox" id="check" /><label for="check"><i class="fa-regular fa-eye fa-lg" id="btn" style="margin-top: 19px; margin-left: -52px;"></i></label></div><br>
+            <div  class="invalid-feedback">Please enter Password</div><br>
+           </div> 
+           <div clas="mb-3">
+            <label for="phoneNumber" class="form-label"><strong>phone number:</strong></label>
+            <input id="phoneNumber" name="phoneNumber" placeholder="Enter phoneNumber"  class="form-control" required /><br>
+            <div  class="invalid-feedback">Please enter phone number</div><br>
+           </div> 
+           <button class="btn btn-success">SIGNUP</button> 
+        </form>
+    </div>
+</div>
+
+<script>
+    const check = document.querySelector("#check");
+    const inp = document.querySelector("#password");
+    const btn = document.querySelector("#btn");
+
+    check.addEventListener("change", function() {
+        if (check.checked) {
+            inp.type = "text";
+            btn.className="fa-regular fa-eye-slash fa-lg"
+        } else {
+            inp.type = "password";
+             btn.className="fa-regular fa-eye fa-lg"
+        }
+    });
+    console.dir(btn)
+    console.dir(check)
+</script>
+</body>

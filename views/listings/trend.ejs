@@ -1,0 +1,75 @@
+<% layout("/layouts/boilerplate") %>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            height: 60vh; /* Adjust this value to change the chart's height */
+            width: 80vw; /* Adjust this value to change the chart's width */
+            margin: auto;
+        }
+    </style>
+<body>
+    <h1>Incident History & Trends (Last 30 Days)</h1>
+    <div class="chart-container">
+        <canvas id="incidentChart"></canvas>
+    </div>
+    <script>
+        const aggregatedData = <%- JSON.stringify(aggregatedData) %>;
+        const categories = <%- JSON.stringify(categories) %>;
+        console.log(aggregatedData)
+        const labels = Array.from({ length: 30 }, (_, i) => {
+            const date = new Date();
+            date.setDate(date.getDate() - 29 + i); 
+            return date.toISOString().slice(0, 10); 
+        });
+
+        const datasets = categories.map(category => {
+            return {
+                label: category,
+                data: aggregatedData[category],
+                fill: false,
+                borderColor: '#' + Math.floor(Math.random()*16777215).toString(16),
+                tension: 0.1,
+                spanGaps: true, 
+            };
+        });
+
+        const ctx = document.getElementById('incidentChart').getContext('2d');
+        const incidentChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date (Last 30 Days)'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Complaints'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Incident History & Trends'
+                    }
+                }
+            }
+        });
+    </script>
+</body>

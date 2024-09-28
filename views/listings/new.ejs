@@ -1,0 +1,193 @@
+<%- layout("/layouts/boilerplate") %>
+<style>
+    button {
+    background-color: #e14141;
+    color: #fff;
+    border: none;
+    border-radius: 10px !important;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+   }
+
+    button:hover {
+    background-color: #b91f00;
+   }
+
+    button:focus {
+    outline: none;
+   }
+</style>
+<script src="https://maps.googleapis.com/maps/api/js?key=process.env.YOUR_API_KEY"></script>
+<body>
+    <div class="container1">
+        <form method="POST" action="/complaints" novalidate class="needs-validation" enctype="multipart/form-data">
+            <h3><b>REGISTER A COMPLAINT</b></h3>
+
+            <label for="videoFeed">Webcam Feed:</label><br>
+            <video id="videoFeed" width="320" height="240" autoplay></video><br>
+            <button type="button" id="startCapture">Start Camera</button><br>
+            <button type="button" id="captureButton">Capture Image</button><br>
+            <canvas id="canvas" style="display:none;"></canvas>
+
+            <!-- Hidden file input to store captured image -->
+            <input type="file" id="image" name="image" style="display:none;" />
+
+            <label for="description" class="form-label">Description:</label>
+            <textarea id="description" name="complain" placeholder="Enter description" class="form-control" required></textarea><br>
+            
+            <label for="category" class="form-label">Choose a Category:</label>
+
+            <select name="category" id="category">
+                <option value="Crime">Crime</option>
+                <option value="Accident">Accident</option>
+                <option value="Disturbance">Disturbance</option>
+            </select><br>
+
+            <label for="location" class="form-label">Location:</label>
+            <input id="location" name="location" placeholder="Enter Streetname" class="form-control" required />
+              <br> 
+            <button type="submit">Add</button>
+            </div><br>
+            
+        </form>
+    </div>
+
+    <script>
+        const video = document.getElementById('videoFeed');
+        const canvas = document.getElementById('canvas');
+        const captureButton = document.getElementById('captureButton');
+        const startCaptureButton = document.getElementById('startCapture');
+        const fileInput = document.getElementById('image');
+        const locationInput = document.getElementById('location');
+
+        startCaptureButton.addEventListener('click', function() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function(stream) {
+                        video.srcObject = stream;
+                    })
+                    .catch(function(err) {
+                        alert('Camera access is required to capture an image.');
+                    });
+            } else {
+                alert('Your browser does not support accessing the camera.');
+            }
+        });
+
+        captureButton.addEventListener('click', function() {
+            const ctx = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            canvas.toBlob(function(blob) {
+                const randomName = 'captured_' + Date.now() + '.jpg';
+                const file = new File([blob], randomName, { type: 'image/jpeg' });
+
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                fileInput.files = dataTransfer.files;
+            }, 'image/jpeg');
+        });
+
+        // function updateLocation(position) {
+        //     const { latitude, longitude } = position.coords;
+        //     getAddressFromCoordinates(latitude, longitude);
+        // }
+
+        // function getAddressFromCoordinates(latitude, longitude) {
+        //     const geocoder = new google.maps.Geocoder();
+        //     const latlng = { lat: latitude, lng: longitude };
+
+        //     geocoder.geocode({ location: latlng }, (results, status) => {
+        //         if (status === "OK") {
+        //             if (results[0]) {
+        //                 locationInput.value = results[0].formatted_address;
+        //                 console.log("Address updated:", results[0].formatted_address);
+        //             } else {
+        //                 locationInput.value = "No address found";
+        //                 console.log("No address found");
+        //             }
+        //         } else {
+        //             locationInput.value = "Geocoding failed due to: " + status;
+        //             console.error("Geocoder failed due to: " + status);
+        //         }
+        //     });
+        // }
+        
+        // function handleLocationError(error) {
+        //     console.error("Error accessing location: ", error);
+        //     locationInput.value = "Unable to fetch location";
+        //     alert("Location access is required for this application. Please allow location access when prompted.");
+        // }
+
+        // function startLocationWatch() {
+        //     if (navigator.geolocation) {
+        //         navigator.geolocation.watchPosition(updateLocation, handleLocationError, {
+        //             enableHighAccuracy: true,
+        //             timeout: 5000,
+        //             maximumAge: 0
+        //         });
+        //     } else {
+        //         locationInput.value = "Geolocation is not supported by this browser.";
+        //         alert("Geolocation is not supported by this browser.");
+        //     }
+        // }
+     window.onload = function() {
+     startLocationWatch();
+    };
+
+function updateLocation(position) {
+    const { latitude, longitude } = position.coords;
+    console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+    getAddressFromCoordinates(latitude, longitude);
+}
+
+function getAddressFromCoordinates(latitude, longitude) {
+    const geocoder = new google.maps.Geocoder();
+    const latlng = { lat: latitude, lng: longitude };
+
+    geocoder.geocode({ location: latlng }, (results, status) => {
+        console.log("Geocoding status:", status);  // Log the status
+        if (status === "OK") {
+            if (results[0]) {
+                locationInput.value = results[0].formatted_address;
+                console.log("Address updated:", results[0].formatted_address);
+            } else {
+                locationInput.value = "No address found";
+                console.log("No address found");
+            }
+        } else {
+            locationInput.value = "Geocoding failed due to: " + status;
+            console.error("Geocoder failed due to: " + status);
+        }
+    });
+}
+
+function handleLocationError(error) {
+    console.error("Error accessing location: ", error);
+    locationInput.value = "Unable to fetch location";
+    alert("Location access is required for this application. Please allow location access when prompted.");
+}
+
+function startLocationWatch() {
+    if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(
+            updateLocation, 
+            handleLocationError, 
+            {
+                enableHighAccuracy: true, 
+                timeout: 5000, 
+                maximumAge: 0
+            }
+        );
+    } else {
+        locationInput.value = "Geolocation is not supported by this browser.";
+        alert("Geolocation is not supported by this browser.");
+    }
+}
+
+    </script>
+</body>

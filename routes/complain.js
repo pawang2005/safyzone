@@ -3,12 +3,12 @@ const router = express.Router();
 const complainControllers = require('../controller/complain.js');
 const { isLoggedIn } = require("../middleware.js");
 const multer = require("multer");
-const { storage } = require("../app.js");
+const { storage } = require("../cloudConfig.js");
 const upload = multer({ storage });
 const wrapAsync = require("../utils/wrapAsync.js");
 
 router.get("/", (req, res) => {
-    res.send("hi, I am root");
+    res.redirect('/complaints')
 });
 
 router.use((req, res, next) => {

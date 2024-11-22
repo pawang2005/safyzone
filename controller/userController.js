@@ -3,6 +3,7 @@
 const User = require("../models/user.js");
 const passport = require('passport');
 
+
 const userController = {
     renderSignup: (req, res) => {
         res.render("users/signup.ejs", { errmsg: req.flash("error") });

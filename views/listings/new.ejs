@@ -19,7 +19,7 @@
     outline: none;
    }
 </style>
-<script src="https://maps.googleapis.com/maps/api/js?key=process.env.YOUR_API_KEY"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=<%=process.env.YOUR_API_KEY%>"></script>
 <body>
     <div class="container1">
         <form method="POST" action="/complaints" novalidate class="needs-validation" enctype="multipart/form-data">
@@ -30,8 +30,7 @@
             <button type="button" id="startCapture">Start Camera</button><br>
             <button type="button" id="captureButton">Capture Image</button><br>
             <canvas id="canvas" style="display:none;"></canvas>
-
-            <!-- Hidden file input to store captured image -->
+            <img id="capturedImage" width="320" height="240" style="display:none;" /><br>
             <input type="file" id="image" name="image" style="display:none;" />
 
             <label for="description" class="form-label">Description:</label>
@@ -61,6 +60,7 @@
         const startCaptureButton = document.getElementById('startCapture');
         const fileInput = document.getElementById('image');
         const locationInput = document.getElementById('location');
+        const capturedImage = document.getElementById('capturedImage');
 
         startCaptureButton.addEventListener('click', function() {
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -82,6 +82,10 @@
             canvas.height = video.videoHeight;
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
+            const imageDataURL = canvas.toDataURL('image/jpeg');
+            capturedImage.src = imageDataURL;
+            capturedImage.style.display = 'block';
+
             canvas.toBlob(function(blob) {
                 const randomName = 'captured_' + Date.now() + '.jpg';
                 const file = new File([blob], randomName, { type: 'image/jpeg' });
@@ -91,50 +95,6 @@
                 fileInput.files = dataTransfer.files;
             }, 'image/jpeg');
         });
-
-        // function updateLocation(position) {
-        //     const { latitude, longitude } = position.coords;
-        //     getAddressFromCoordinates(latitude, longitude);
-        // }
-
-        // function getAddressFromCoordinates(latitude, longitude) {
-        //     const geocoder = new google.maps.Geocoder();
-        //     const latlng = { lat: latitude, lng: longitude };
-
-        //     geocoder.geocode({ location: latlng }, (results, status) => {
-        //         if (status === "OK") {
-        //             if (results[0]) {
-        //                 locationInput.value = results[0].formatted_address;
-        //                 console.log("Address updated:", results[0].formatted_address);
-        //             } else {
-        //                 locationInput.value = "No address found";
-        //                 console.log("No address found");
-        //             }
-        //         } else {
-        //             locationInput.value = "Geocoding failed due to: " + status;
-        //             console.error("Geocoder failed due to: " + status);
-        //         }
-        //     });
-        // }
-        
-        // function handleLocationError(error) {
-        //     console.error("Error accessing location: ", error);
-        //     locationInput.value = "Unable to fetch location";
-        //     alert("Location access is required for this application. Please allow location access when prompted.");
-        // }
-
-        // function startLocationWatch() {
-        //     if (navigator.geolocation) {
-        //         navigator.geolocation.watchPosition(updateLocation, handleLocationError, {
-        //             enableHighAccuracy: true,
-        //             timeout: 5000,
-        //             maximumAge: 0
-        //         });
-        //     } else {
-        //         locationInput.value = "Geolocation is not supported by this browser.";
-        //         alert("Geolocation is not supported by this browser.");
-        //     }
-        // }
      window.onload = function() {
      startLocationWatch();
     };
@@ -150,7 +110,7 @@ function getAddressFromCoordinates(latitude, longitude) {
     const latlng = { lat: latitude, lng: longitude };
 
     geocoder.geocode({ location: latlng }, (results, status) => {
-        console.log("Geocoding status:", status);  // Log the status
+        console.log("Geocoding status:", status);  
         if (status === "OK") {
             if (results[0]) {
                 locationInput.value = results[0].formatted_address;

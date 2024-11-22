@@ -22,8 +22,8 @@ const LocalStrategy = require('passport-local');
 
 
 
-const MONGO_URL ="mongodb://127.0.0.1:27017/acehack";
-// const dbUrl = process.env.ATLASDB_URL;
+// const MONGO_URL ="mongodb://127.0.0.1:27017/acehack";
+const dbUrl = process.env.ATLASDB_URL;
 
 main().then(() =>{
    console.log("connected to db");
@@ -32,7 +32,7 @@ main().then(() =>{
 });
 
 async function main(){
-    await mongoose.connect(MONGO_URL);
+    await mongoose.connect(dbUrl);
 };
 
 app.use(express.static(path.join(__dirname, "public")));

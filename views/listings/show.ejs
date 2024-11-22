@@ -1,33 +1,28 @@
 <%- layout("/layouts/boilerplate") %>
 
-
-
 <style>
-   /* General Styles */
-
 
 h3 {
     text-align: center;
-    font-size: 2rem; /* Slightly larger for better emphasis */
-    font-weight: 700; /* Stronger bold */
-    color: #e14141; /* Eye-catching red color */
+    font-size: 2rem;
+    font-weight: 700; 
+    color: #e14141; 
     margin-bottom: 20px;
     margin-top: -5px;
-    letter-spacing: 1px; /* Adds spacing between letters for readability */
-    text-transform: uppercase; /* Makes the text stand out more */
-    background-image: linear-gradient(90deg, #e14141 0%, #ff7f7f 100%); /* Gradient effect in text */
+    letter-spacing: 1px; 
+    text-transform: uppercase; 
+    background-image: linear-gradient(90deg, #e14141 0%, #ff7f7f 100%);
     background-clip: text;
-    -webkit-background-clip: text; /* For Webkit browsers (Chrome, Safari) */
-    color: transparent; /* Make text color transparent to reveal gradient */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+    -webkit-background-clip: text;
+    color: transparent; 
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); 
 }
 
-/* Complaint Card */
 .card {
     background-color: #fff;
     border: none;
     border-radius: 15px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Soft shadow */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); 
     padding: 10px;
 }
 
@@ -36,18 +31,15 @@ h3 {
     border: 5px solid #e14141;
 }
 
-/* Image Styles */
 .show-img {
     height: 33vh;
     width: 80%;
-    /* object-fit: cover; */
     border-radius: 12px;
     margin-bottom: 15px;
     margin-left: auto;
     margin-right: auto;
 }
 
-/* Card Body Styles */
 .card-body ul {
     list-style-type: none;
     padding: 0;
@@ -60,10 +52,9 @@ h3 {
 }
 
 .card-body ul li strong {
-    color: #e14141; /* Highlighting strong text in red */
+    color: #e14141; 
 }
 
-/* Buttons Section */
 .btns {
     display: flex;
     justify-content: center;
@@ -86,7 +77,6 @@ button:hover {
     background-color: #d03030;
 }
 
-/* Card Wrapper */
 .show-card {
     padding-left: 0;
     padding-right: 0;
@@ -97,7 +87,6 @@ button:hover {
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.3s ease;
-    /* background-color: #f9f9f9; */
     width: 100%;
     height: auto;
     margin: 8px;
@@ -114,7 +103,7 @@ button:hover {
 .card-title {
     font-size: 1rem;
     font-weight: bold;
-    color: #e14141; /* Stylish color for the username */
+    color: #e14141; 
     display: flex;
     align-items: center;
 }
@@ -124,7 +113,7 @@ button:hover {
     display: inline-block;
     width: 10px;
     height: 10px;
-    background-color: #39e141; /* Green circle to indicate online status */
+    background-color: #39e141;
     border-radius: 50%;
     margin-right: 10px;
 }
@@ -137,8 +126,8 @@ button:hover {
     align-items: center;
 }
 .btn-width {
-    max-width: 500px; /* Fix the width of the buttons */
-    margin: 5px;  /* Add some spacing between the buttons */
+    max-width: 500px; 
+    margin: 5px; 
     align-items: center;
   }
 
@@ -150,8 +139,8 @@ button:hover {
 }
 
 .custom-btn:hover {
-    background-color: #ff7f7f; /* Lighter shade of the original color */
-    color: #000; /* Change text color on hover */
+    background-color: #ff7f7f; 
+    color: #000;
 }
 </style>
 <div class="row show-card">
@@ -160,7 +149,6 @@ button:hover {
    
 <h3><i class="fa-solid fa-newspaper fa-lg" style="background-color: #e62c2c;margin-right: 8px;"></i>COMPLAINT DETAILS</h3>
 <div class="row">
-    <!-- Complaint Card Section -->
     <div class="card col-md-6 listing-card" id="cardContent">
         <img src="<%=complaint.imageURL.url %>" class="card-img-top show-img" alt="...">
         <div class="card-body">
@@ -183,7 +171,6 @@ button:hover {
         <button id="downloadBtn">Download as PDF</button>
     </div>
 
-    <!-- Review Form Section -->
     <div class="col-md-5 offset-1">
         <hr/>
         <button id="downloadBtn">Download as PDF</button>
@@ -218,7 +205,6 @@ button:hover {
 <script>
     async function incrementSupport(complaintId) {
         try {
-            // Send a POST request to update the support count in the backend
             const response = await fetch(`/complaints/${complaintId}/support`, {
                 method: 'POST',
                 headers: {
@@ -229,10 +215,8 @@ button:hover {
             const data = await response.json();
 
             if (response.ok) {
-                // Update the support count in the UI
                 document.getElementById('support-count').innerText = 'Support: ' + data.supportCount;
 
-                // Change the button to grey and disable it
                 const button = document.getElementById('support-btn');
                 button.classList.remove('btn-success');
                 button.classList.add('btn-secondary');
@@ -246,67 +230,58 @@ button:hover {
     }
 
     document.getElementById('downloadBtn').addEventListener('click', function () {
-    // Select the card content by its ID
     var cardContent = document.getElementById('cardContent');
 
-    // Clone the card content to add additional elements for the PDF
     var clonedCardContent = cardContent.cloneNode(true);
 
-    // Create a container div for the entire PDF content (heading, card, footer)
     var pdfContainer = document.createElement('div');
     pdfContainer.style.display = 'flex';
     pdfContainer.style.flexDirection = 'column';
-    pdfContainer.style.justifyContent = 'space-between'; // Space between header, content, and footer
-    pdfContainer.style.height = '100%'; // Make the container take up the full PDF height
+    pdfContainer.style.justifyContent = 'space-between'; 
+    pdfContainer.style.height = '100%';
 
-    // Create a heading element for "SafyZone"
     var heading = document.createElement('h1');
     heading.innerText = 'SafyZone';
     heading.style.color = '#e14141';
     heading.style.textAlign = 'center';
-    heading.style.margin = '20px 0'; // Add margin to the heading
+    heading.style.margin = '20px 0'; 
 
-    // Add the cloned card content (already formatted) into the middle of the container
-    clonedCardContent.style.margin = '20px'; // Add margin to ensure space around the card content
+    clonedCardContent.style.margin = '20px'; 
     clonedCardContent.style.maxWidth = '100%';
-    clonedCardContent.style.boxSizing = 'border-box'; // Ensure padding doesn't affect width
+    clonedCardContent.style.boxSizing = 'border-box'; 
 
-    // Create a footer element for "Verified PDF generated by SafyZone"
     var footer = document.createElement('div');
     footer.innerHTML = '<b><i>@Verified PDF generated by SafyZone</i></b>';
-    footer.style.color = '#0000ff'; // Blue color
+    footer.style.color = '#0000ff'; 
     footer.style.position = 'absolute';
-    footer.style.bottom = '0px'; // Position at the bottom
-    footer.style.right = '20px'; // Position on the bottom-right corner
+    footer.style.bottom = '0px'; 
+    footer.style.right = '20px'; 
     footer.style.fontSize = '12px';
 
-    // Append the heading, cloned card content, and footer to the PDF container
-    pdfContainer.appendChild(heading);  // Top
-    pdfContainer.appendChild(clonedCardContent); // Middle
-    pdfContainer.appendChild(footer); // Bottom right corner
+    pdfContainer.appendChild(heading);  
+    pdfContainer.appendChild(clonedCardContent);
+    pdfContainer.appendChild(footer); 
 
     clonedCardContent.style.width = '90%';
     clonedCardContent.style.maxWidth = '90%';
     clonedCardContent.style.position = 'relative';
 
-    // Set up the PDF options
     var opt = {
-        margin: 0, // No margin to use full PDF length
+        margin: 0, 
         filename: 'complaint-card.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: {
-            scale: 3, // Higher scale for better quality
-            useCORS: true, // Allow cross-origin image loading
+            scale: 3, 
+            useCORS: true,
             logging: true,
         },
         jsPDF: {
             unit: 'in',
-            format: 'letter', // Set the format to US Letter size for full length
-            orientation: 'portrait' // Portrait orientation
+            format: 'letter', 
+            orientation: 'portrait' 
         }
     };
 
-    // Generate the PDF
     html2pdf().from(pdfContainer).set(opt).save();
 });
 

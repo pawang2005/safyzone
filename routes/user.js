@@ -1,10 +1,8 @@
-// routes/userRoutes.js
-
 const express = require('express');
 const router = express.Router();
 const userController = require('../controller/userController');
 const passport = require('passport');
-const wrapAsync = require('../utils/wrapAsync'); // Assuming you have this utility function
+const wrapAsync = require('../utils/wrapAsync'); 
 
 router.get("/signup", userController.renderSignup);
 router.post("/signup", wrapAsync(userController.signup));

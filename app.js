@@ -8,7 +8,7 @@ const route = require('./routes/complain.js')
 const userRoute = require('./routes/user.js')
 const mongoose = require("mongoose");
 const User = require("./models/user.js");
-
+const serverless = require('serverless-http');
 // const ejs = require('ejs');
 const path = require("path");
 const ejsMate = require("ejs-mate");

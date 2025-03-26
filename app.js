@@ -12,15 +12,13 @@ const serverless = require('serverless-http');
 // const ejs = require('ejs');
 const path = require("path");
 const ejsMate = require("ejs-mate");
-
+const {Incident} = require("./models/incident.js");
 const bodyParser = require('body-parser')
 
 const flash = require("connect-flash");
 const session = require('express-session')
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
-
-
 
 // const MONGO_URL ="mongodb://127.0.0.1:27017/acehack";
 const dbUrl = process.env.ATLASDB_URL;
@@ -67,6 +65,23 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
+
+app.post("/api/report-incident", async (req, res) => {
+    try {
+        const {location, type, severity} = req.body;
+        const newIncident = new Incident({
+            location,
+            type,
+            severity,
+            user: req.user._id
+        });
+        await newIncident.save();
+        res.json({ success: true, message: "Incident reported!" });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 app.use('/', route)
 app.use('/', userRoute)
  
@@ -79,5 +94,5 @@ app.use('/', userRoute)
  app.listen(8080, ()=>{
      console.log("server is listening to port 8080");
  }); 
-
- module.exports.handler = serverless(app);
+module.exports.handler = serverless(app);
+module.exports = {Incident};

@@ -20,18 +20,18 @@ router.use((req, res, next) => {
 
 router.route('/complaints')
     .get(wrapAsync(complainControllers.index))
-    .post(isLoggedIn, upload.single('image'), wrapAsync(complainControllers.createComplaint));
+    .post( upload.single('image'), wrapAsync(complainControllers.createComplaint));
 
-router.get('/complaints/new', isLoggedIn, complainControllers.renderNewForm);
+router.get('/complaints/new', complainControllers.renderNewForm);
 
-router.get('/heatmap', isLoggedIn, wrapAsync(complainControllers.renderHeatmap));
+router.get('/heatmap', wrapAsync(complainControllers.renderHeatmap));
 
 router.post('/api/rate-route', wrapAsync(complainControllers.rateRoute));
 
-router.get('/trend', isLoggedIn, wrapAsync(complainControllers.renderTrend));
+router.get('/trend', wrapAsync(complainControllers.renderTrend));
 
 router.route('/complaints/:id')
-    .get(isLoggedIn, wrapAsync(complainControllers.showComplaint));
+    .get(wrapAsync(complainControllers.showComplaint));
 
 router.post('/complaints/:id/support', wrapAsync(complainControllers.supportComplaint));
 

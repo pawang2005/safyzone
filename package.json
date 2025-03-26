@@ -11,7 +11,7 @@
     "body-parser": "^1.20.3",
     "cloudinary": "^1.21.0",
     "connect-flash": "^0.1.1",
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "ejs-mate": "^4.0.0",
     "express": "^4.21.0",
@@ -22,6 +22,7 @@
     "netlify-lambda": "^2.0.16",
     "nodemailer": "^6.9.15",
     "nodemon": "^3.1.7",
+    "openai": "^4.89.0",
     "otplib": "^12.0.1",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
@@ -31,8 +32,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "netlify-lambda build functions-src functions",
-    "start": "npm run build && netlify dev"
+    "start": "npm run build && netlify dev",
+    "dev": "nodemon app.js"
   },
-  "devDependencies": {},
   "keywords": []
 }

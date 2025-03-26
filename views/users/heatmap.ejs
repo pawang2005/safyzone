@@ -3,15 +3,15 @@
     body { margin: 0; font-family: Arial, sans-serif; background-color: #f4f4f4; }
     #map { height: 500px; width: 1000px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); margin: 10px 10px; display: block; }
     .mapBody { display: flex; justify-content: center; align-items: center; min-height: 60vh; }
-    input[type="text"], button { padding: 10px; margin: 10px; border-radius: 5px; border: 1px solid #ddd; font-size: 16px; width: calc(100% - 40px); max-width: 300px; box-sizing: border-box; }
+    input[type="text"], #get-route { padding: 10px; margin: 10px; border-radius: 5px; border: 1px solid #ddd; font-size: 16px; width: calc(100% - 40px); max-width: 300px; box-sizing: border-box; }
     input[type="text"] { display: inline-block; background-color: #fff; }
-    button { background-color: #007bff; color: white; cursor: pointer; transition: background-color 0.3s ease; border: none; }
-    button:hover { background-color: #0056b3; }
+    #get-route { background-color: #007bff; color: white; cursor: pointer; transition: background-color 0.3s ease; border: none; }
+    #get-route:hover { background-color: #0056b3; }
     .controls { text-align: center; margin-bottom: 20px; }
     #warning { font-size: 14px; color: #ff0000; margin: 10px auto; text-align: center; }
     @media screen and (max-width: 1024px) {
-        #map { width: 90%; }
-        input[type="text"], button { width: calc(100% - 20px); max-width: none; }
+        #map { width: 90%; height: 50vh; }
+        input[type="text"], #get-route { width: calc(100% - 20px); max-width: none; }
     }
 </style>
 <script src="https://maps.googleapis.com/maps/api/js?key=<%=process.env.YOUR_API_KEY%>&libraries=visualization,drawing,places" async defer></script>
@@ -28,9 +28,12 @@
     <div id="warning"></div>
 
     <script>
+
         var complaints = <%- complaints %>;
+        const incidents = <%- JSON.stringify(Incidents) %>;
         var map, heatmap, bounds, directionsService, directionsRenderer;
         var heatmapData = [];
+        var markers = [];   
         var liveLocationCoords = null;
 
         function initMap() {
@@ -113,6 +116,33 @@
                         });
                     }
                 })
+            ),incidents.map(async(incident)=> {
+                if (incident.location) {
+                    var latLng = new google.maps.LatLng(incident.location.lat, incident.location.lng);
+                    var weight = getWeightFromSeverity(incident.severity);
+                    heatmapData.push({ location: latLng, weight: weight });
+                    bounds.extend(latLng);
+                    var location = await reverseGeocodeLocation(latLng);
+                    incident.location = await location;
+                    
+                    var marker = new google.maps.Marker({
+                        position: latLng,
+                        map: map,
+                        title: incident.type
+                    });
+      
+                    markers.push(marker);
+      
+                    var infoWindow = new google.maps.InfoWindow({
+                        content: `Incident: ${incident.type}<br>Severity: ${incident.severity}<br>Location: ${incident.location}`
+                    });
+      
+                    marker.addListener('mouseover', () => infoWindow.open(map, marker));
+                    marker.addListener('mouseout', () => infoWindow.close());
+                } else {
+                    console.warn(`Skipping location: ${incident.location} (geocoding failed)`);
+                }
+            }
             ));
         }
 
@@ -122,7 +152,7 @@
                 map: map
             });
 
-            heatmap.set('radius', 50);
+            heatmap.set('radius', 20);
             heatmap.set('opacity', 0.7);
             heatmap.set('dissipating', true);
             heatmap.set('maxIntensity', 10);
@@ -140,13 +170,14 @@
                 {
                     origin: start,
                     destination: end,
-                    travelMode: google.maps.TravelMode.DRIVING
+                    travelMode: google.maps.TravelMode.WALKING,
+                    unitSystem: google.maps.UnitSystem.METRIC
                 },
                 (response, status) => {
                     if (status === 'OK') {
                         directionsRenderer.setDirections(response);
+                        console.log('Directions response:', response);
                         const severity = checkRouteAgainstHeatmap(response.routes[0].legs[0].steps);
-
                         const routeDetails = {
                             start: start,
                             end: end,
@@ -183,9 +214,10 @@
         }
 
         function checkRouteAgainstHeatmap(steps) {
+            document.getElementById('warning').innerHTML = ''; // Clear previous warnings
             let overallSeverity = 'Low';
-            const severityLevels = { 'Critical': 3, 'Mild': 2, 'Low': 1 };
-            const proximityThreshold = 0.5;
+            const severityLevels = { 'Critical': 10, 'Mild': 7, 'Low': 5 };
+            const proximityThreshold = 0.2; // 200 meters
             let warningMessage = '';
             let warningDisplayed = false;
 
@@ -196,15 +228,17 @@
                         if (distance <= proximityThreshold) {
                             const currentSeverity = getSeverityFromWeight(heatmapPoint.weight);
                             if (heatmapPoint.weight > 1 && !warningDisplayed) {
+                                warningDisplayed = true;
                                 reverseGeocodeLocation(latLng).then(address => {
                                     warningMessage += `Warning: This route passes through a high-risk area near ${address} with complaints. Consider avoiding this area!<br>`;
                                     document.getElementById('warning').innerHTML = warningMessage || 'Route is clear.';
-                                    warningDisplayed = true;
+                                    
                                 });
                             }
                             if (severityLevels[currentSeverity] > severityLevels[overallSeverity]) {
                                 overallSeverity = currentSeverity;
                             }
+                            
                         }
                     });
                 });
@@ -214,7 +248,7 @@
         }
 
         function getSeverityFromWeight(weight) {
-            return weight === 3 ? 'Critical' : weight === 2 ? 'Mild' : 'Low';
+            return weight === 10 ? 'Critical' : weight === 7 ? 'Mild' : 'Low';
         }
 
         function calculateDistance(latLng1, latLng2) {

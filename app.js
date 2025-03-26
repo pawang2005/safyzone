@@ -19,6 +19,7 @@ const flash = require("connect-flash");
 const session = require('express-session')
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const { isLoggedIn } = require('./middleware.js');
 
 // const MONGO_URL ="mongodb://127.0.0.1:27017/acehack";
 const dbUrl = process.env.ATLASDB_URL;

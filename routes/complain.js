@@ -22,19 +22,18 @@ router.route('/complaints')
     .get(wrapAsync(complainControllers.index))
     .post( upload.single('image'), wrapAsync(complainControllers.createComplaint));
 
-router.get('/complaints/new', complainControllers.renderNewForm);
+router.get('/complaints/new',isLoggedIn, complainControllers.renderNewForm);
 
-router.get('/heatmap', wrapAsync(complainControllers.renderHeatmap));
+router.get('/heatmap',isLoggedIn, wrapAsync(complainControllers.renderHeatmap));
 
-router.post('/api/rate-route', wrapAsync(complainControllers.rateRoute));
+router.post('/api/rate-route',isLoggedIn, wrapAsync(complainControllers.rateRoute));
 
 router.get('/trend', wrapAsync(complainControllers.renderTrend));
 
-router.route('/complaints/:id')
-    .get(wrapAsync(complainControllers.showComplaint));
+router.get('/complaints/:id',isLoggedIn,wrapAsync(complainControllers.showComplaint), isLoggedIn);
 
-router.post('/complaints/:id/support', wrapAsync(complainControllers.supportComplaint));
+router.post('/complaints/:id/support',isLoggedIn, wrapAsync(complainControllers.supportComplaint));
 
-router.post("/complaints/:id/reviews", wrapAsync(complainControllers.createReview));
+router.post("/complaints/:id/reviews", isLoggedIn,wrapAsync(complainControllers.createReview));
 
 module.exports = router;

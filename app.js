@@ -93,7 +93,7 @@ app.use('/', userRoute)
  
  if (process.env.NODE_ENV !== 'production') {
     app.listen(8080, () => {
-      console.log(`Server running on port ${port}`);
+      console.log(`Server running on port 8080`);
     });
   }
 module.exports = {Incident};

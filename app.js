@@ -91,8 +91,10 @@ app.use('/', userRoute)
   //res.status(status).send(message);
  });
  
- app.listen(8080, ()=>{
-     console.log("server is listening to port 8080");
- }); 
+ if (process.env.NODE_ENV !== 'production') {
+    app.listen(8080, () => {
+      console.log(`Server running on port ${port}`);
+    });
+  }
 module.exports.handler = serverless(app);
 module.exports = {Incident};

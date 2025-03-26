@@ -3,6 +3,7 @@ if (process.env.NODE_ENV != "production") {
 }
 
 const express = require("express");
+const port = process.env.PORT || 3001;
 const app= express();
 const route = require('./routes/complain.js')
 const userRoute = require('./routes/user.js')
@@ -90,9 +91,9 @@ app.use('/', userRoute)
   //res.status(status).send(message);
  });
  
- if (process.env.NODE_ENV !== 'production') {
-    app.listen(8080, () => {
-      console.log(`Server running on port 8080`);
+
+    app.listen(port, () => {
+      console.log(`Server running on port 3001`);
     });
-  }
+  
 module.exports = {Incident};

@@ -230,7 +230,10 @@
       <div class="mapBody">
         <div class="map-container">
           <div id="map"></div>
-          <div><button id="report-incident">Report Incident</button></div>
+          <div>
+            <% if (currUser) { %>
+            <button id="report-incident">Report Incident</button>
+          <% } %></div>
         </div>
     
         <div class="complaints-box">
@@ -290,8 +293,7 @@
         <span class="quote-mark">"</span>
         <span class="quote"
           >Self-Defense is not just a set of techniques; it's a state of mind, and
-          it begins with the belief that you are worth defending.</span
-        >
+          it begins with the belief that you are worth defending.</span>
         <span class="quote-mark-right">"</span>
       </div>
     </body>
@@ -303,9 +305,12 @@
         var map, heatmap, bounds;
         var markers = [];
         var heatmapData = [];
-        document.getElementById("report-incident").addEventListener("click", () => {
-            alert("Click on the map to report an incident.");
+        var currUser = <%- currUser ? JSON.stringify(currUser) : 'null' %>;
     
+        if (currUser) {
+            document.getElementById("report-incident").addEventListener("click", () => {
+            alert("Click on the map to report an incident.");
+            
             google.maps.event.addListenerOnce(map, "click", (event) => {
                 const incidentLocation = event.latLng;
     
@@ -335,6 +340,8 @@
                     .catch((err) => console.error("Error reporting incident:", err));
             });
         });
+        }
+        
     
         function updateHeatmap(incidentData) {
             const latLng = new google.maps.LatLng(incidentData.location.lat, incidentData.location.lng);

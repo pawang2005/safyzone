@@ -1,0 +1,72 @@
+<% layout("/layouts/boilerplate") %>
+<% if (error && error.length) { %>
+    <div class="alert alert-danger alert-dismissible fade show text-center mx-auto" style="max-width: 90%;" role="alert">
+        <%= error %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<% } %>
+
+<style>
+    .pass {
+        display: flex;
+        align-items: center;
+    }
+    #check {
+        display: none;
+    }
+    #btn {
+        color: #575656;
+        cursor: pointer;
+    }
+    @media (max-width: 576px) {
+        .container {
+            width: 90% !important;
+        }
+        .pass {
+            flex-direction: row;
+        }
+    }
+</style>
+
+<body>
+    <div class="container mt-3 text-center">
+        <h3><b>LOGIN</b></h3>
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-sm-10">
+                <form method="POST" action="/login" novalidate class="needs-validation">
+                    <div class="mb-3">
+                        <label for="username" class="form-label"><strong>Username:</strong></label>
+                        <input id="username" name="username" placeholder="Enter username" class="form-control" required />
+                        <div class="invalid-feedback">Please enter Username</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label"><strong>Password:</strong></label>
+                        <div class="pass">
+                            <input type="password" id="password" name="password" placeholder="Enter password" class="form-control" required />
+                            <input type="checkbox" id="check" />
+                            <label for="check"><i class="fa-regular fa-eye fa-lg" id="btn" style="margin-left: -40px;"></i></label>
+                        </div>
+                        <div class="invalid-feedback">Please enter Password</div>
+                    </div>
+                    <button class="btn btn-success w-100">LOGIN</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const check = document.querySelector("#check");
+        const inp = document.querySelector("#password");
+        const btn = document.querySelector("#btn");
+
+        check.addEventListener("change", function() {
+            if (check.checked) {
+                inp.type = "text";
+                btn.className = "fa-regular fa-eye-slash fa-lg";
+            } else {
+                inp.type = "password";
+                btn.className = "fa-regular fa-eye fa-lg";
+            }
+        });
+    </script>
+</body>

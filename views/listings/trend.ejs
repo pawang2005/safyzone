@@ -1,0 +1,156 @@
+<%- layout("/layouts/boilerplate") %>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    /* Responsive Chart Container */
+    .chart-section {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .chart-container {
+        position: relative;
+        width: 100%;
+        height: 50vh;
+        min-height: 400px;
+    }
+
+    /* Responsive Heading */
+    h1 {
+        text-align: center;
+        font-size: 2rem;
+        color: #e14141;
+        margin-bottom: 30px;
+        padding: 0 15px;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .chart-section {
+            padding: 10px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            height: 40vh;
+            min-height: 300px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        h1 {
+            font-size: 1.3rem;
+        }
+
+        .chart-container {
+            height: 30vh;
+            min-height: 250px;
+        }
+    }
+</style>
+
+<div class="container-fluid chart-section">
+    <h1>Incident History & Trends (Last 30 Days)</h1>
+    <div class="chart-container">
+        <canvas id="incidentChart"></canvas>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const aggregatedData = <%- JSON.stringify(aggregatedData) %>;
+        const categories = <%- JSON.stringify(categories) %>;
+
+        // Generate labels for last 30 days
+        const labels = Array.from({ length: 30 }, (_, i) => {
+            const date = new Date();
+            date.setDate(date.getDate() - 29 + i); 
+            return date.toISOString().slice(0, 10); 
+        });
+
+        // Generate consistent colors for categories
+        const generateConsistentColors = (numColors) => {
+            const baseColors = [
+                '#e14141', '#39e141', '#4141e1', '#e1e141', 
+                '#41e1e1', '#e141e1', '#ff7f7f', '#7fff7f'
+            ];
+            return categories.map((_, index) => 
+                baseColors[index % baseColors.length]
+            );
+        };
+
+        const datasetColors = generateConsistentColors(categories.length);
+
+        const datasets = categories.map((category, index) => {
+            return {
+                label: category,
+                data: aggregatedData[category],
+                fill: false,
+                borderColor: datasetColors[index],
+                backgroundColor: datasetColors[index],
+                tension: 0.1,
+                spanGaps: true, 
+            };
+        });
+
+        const ctx = document.getElementById('incidentChart').getContext('2d');
+        const incidentChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date (Last 30 Days)'
+                        },
+                        ticks: {
+                            autoSkip: true,
+                            maxTicksLimit: 10 // Limit x-axis labels on smaller screens
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Complaints'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            boxWidth: 20, // Smaller legend box for better mobile view
+                            font: {
+                                size: 10 // Smaller font size for legend
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Incident History & Trends',
+                        font: {
+                            size: 16 
+                        }
+                    }
+                }
+            }
+        });
+
+        // Handle window resize to adjust chart
+        window.addEventListener('resize', function() {
+            incidentChart.resize();
+        });
+    });
+</script>

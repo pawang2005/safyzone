@@ -1,0 +1,526 @@
+<% layout("/layouts/boilerplate") %> <% if (success && success.length) { %>
+    <div
+      class="alert alert-success alert-dismissible fade show"
+      role="alert"
+      style="max-width: 60%; margin: 0 auto"
+    >
+      <strong>Success Message:</strong> <%= success %>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    <% } %> <% if (error && error.length) { %>
+    <div
+      class="alert alert-danger alert-dismissible fade show"
+      role="alert"
+      style="max-width: 60%; margin: 0 auto"
+    >
+      <%= error %>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    <% } %>
+    
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 500px;
+        width: 750px;
+        border-radius: 25px;
+        margin-left: 0%;
+      }
+      .mapBody {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        height: 80%;
+        width: 100%;
+        margin-top: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        border-radius: 25px;
+      }
+      .complaints-box {
+        width: 40%;
+        padding: 20px;
+        background-color: #f9f9f9;
+        overflow-y: auto;
+        border-right: 2px solid #ddd;
+        height: 80vh;
+        border-radius: 10px;
+      }
+      .complaints-box h3 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      .complaints-container {
+        height: calc(100vh - 60px);
+        overflow-y: scroll;
+        padding-right: 10px;
+        border-radius: 5px;
+      }
+      .complaint-card,
+      .tip-card {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 20px;
+        transition: box-shadow 0.3s ease;
+      }
+      .complaint-card:hover {
+        box-shadow: 2px 6px 8px rgba(225, 65, 65, 0.8);
+      }
+      .complaint-card h4 {
+        margin-top: 0;
+        color: #333;
+      }
+      .buttons-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+        gap: 5px;
+      }
+      .tab-button,
+      .tips-button {
+        padding: 10px 20px;
+        border: 2px solid #e14141;
+        background-color: white;
+        color: #e14141;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+        border-radius: 5px;
+      }
+      .tab-button.active,
+      .tips-button.active {
+        background-color: #e14141;
+        color: white;
+      }
+      .section {
+        display: none;
+      }
+      .section.active {
+        display: block;
+      }
+      .tips-cards {
+        margin-top: 20px;
+      }
+      .line {
+        border: 2px solid #e14141;
+        width: 90%;
+      }
+      .line1 {
+        border: 3px;
+        border-style: solid;
+        border-image: linear-gradient(to right, #f08a8a, #e14141, #e88a8a);
+        border-image-slice: 1;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .footer {
+        padding: 0px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .quote-mark {
+        font-size: 3rem;
+        color: #f14141;
+      }
+      .quote-mark-right {
+        font-size: 3rem;
+        color: #f14141;
+      }
+      .quote {
+        font-family: "Georgia", serif;
+        font-style: italic;
+        font-weight: bold;
+        color: grey;
+        font-size: 1.3rem;
+        text-align: center;
+        max-width: 80%;
+        line-height: 1.5;
+        position: relative;
+        z-index: 1;
+      }
+      .map-container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+        #report-incident {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #e14141;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin: 15px 0;
+        }
+    
+        #report-incident:hover {
+            background-color: #ff7f7f;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+    
+        #report-incident:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    
+      @media (max-width: 1024px) {
+        .footer {
+          padding: 30px 10px;
+        }
+        .quote {
+          font-size: 1rem;
+          max-width: 90%;
+        }
+        .quote-mark,
+        .quote-mark-right {
+          font-size: 3rem;
+        }
+        .map-container{
+          width: 100%;
+          flex-direction: column;
+        }
+        .mapBody {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+    
+        #map {
+          height: 50vh;
+          width: 100%;
+        }
+    
+        .complaints-box {
+          width: 100%;
+          max-height: 80vh;
+        }
+      }
+    </style>
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.YOUR_API_KEY %>&libraries=visualization"></script>
+   
+    <body>
+      <div class="mapBody">
+        <div class="map-container">
+          <div id="map"></div>
+          <div><button id="report-incident">Report Incident</button></div>
+        </div>
+    
+        <div class="complaints-box">
+          <div class="buttons-container">
+            <button id="complaintsBtn" class="tab-button active">Complaints</button>
+            <button id="safetyTipsBtn" class="tab-button">Safety Tips</button>
+          </div>
+          <div class="line"></div>
+          <br />
+          <div id="complaintsSection" class="section active">
+            <div class="complaints-container">
+              <% if (!complaints || complaints.length === 0) { %>
+              <p>No Complaints Available</p>
+              <% } else { %> <% complaints.forEach(function(complaint) { %>
+              <div class="complaint-card">
+                <p><strong>Category:</strong> <%= complaint.category %></p>
+                <p><strong>Date:</strong> <%= complaint.date %></p>
+                <p><strong>Location:</strong> <%= complaint.location %></p>
+                <a
+                  class="nav-link"
+                  style="color: #e14141"
+                  href="/complaints/<%= complaint._id %>"
+                  >View More</a
+                >
+              </div>
+              <% }) %> <% } %>
+            </div>
+          </div>
+          <div id="safetyTipsSection" class="section">
+            <div class="buttons-container">
+              <button id="menTipsBtn" class="tips-button">General Tips</button>
+              <button id="womenTipsBtn" class="tips-button">Women Tips</button>
+            </div>
+            <div id="menTipsCards" class="tips-cards">
+              <% for( let index = 0; index < (tipsArray.length/2); index++ ) { %>
+              <div class="tip-card">
+                <% if (tipsArray[index].startsWith('-')) { %> <%= tipsArray[index]
+                %> <% } %>
+              </div>
+              <% } %>
+            </div>
+            <div id="womenTipsCards" class="tips-cards">
+              <% for( let index = tipsArray.length/2; index < (tipsArray.length);
+              index++ ) { %>
+              <div class="tip-card">
+                <% if (tipsArray[index].startsWith('-')) { %> <%= tipsArray[index]
+                %> <% } %>
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div class="line1"></div>
+      <div class="footer">
+        <span class="quote-mark">"</span>
+        <span class="quote"
+          >Self-Defense is not just a set of techniques; it's a state of mind, and
+          it begins with the belief that you are worth defending.</span
+        >
+        <span class="quote-mark-right">"</span>
+      </div>
+    </body>
+    
+    <script>
+    
+        var complaints = <%- JSON.stringify(complaints) %>;
+        const incidents = <%- JSON.stringify(Incidents) %>;
+        var map, heatmap, bounds;
+        var markers = [];
+        var heatmapData = [];
+        document.getElementById("report-incident").addEventListener("click", () => {
+            alert("Click on the map to report an incident.");
+    
+            google.maps.event.addListenerOnce(map, "click", (event) => {
+                const incidentLocation = event.latLng;
+    
+                const incidentType = prompt("Enter incident type (e.g., Theft, Harassment, Accident):");
+                if (!incidentType) return;
+    
+                const severity = prompt("Enter severity (Low, Mild, Critical):");
+                if (!severity) return;
+    
+                const incidentData = {
+                    location: { lat: incidentLocation.lat(), lng: incidentLocation.lng() },
+                    type: incidentType,
+                    severity: severity,
+                };
+    
+                // Send data to backend
+                fetch("/api/report-incident", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(incidentData),
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        alert("Incident reported successfully!");
+                        updateHeatmap(incidentData);
+                    })
+                    .catch((err) => console.error("Error reporting incident:", err));
+            });
+        });
+    
+        function updateHeatmap(incidentData) {
+            const latLng = new google.maps.LatLng(incidentData.location.lat, incidentData.location.lng);
+    
+            heatmapData.push({
+                location: latLng,
+                weight: getWeightFromSeverity(incidentData.severity),
+            });
+    
+            heatmap.setData(heatmapData);
+    
+            new google.maps.Marker({
+                position: latLng,
+                map: map,
+                title: `${incidentData.type} (Severity: ${incidentData.severity})`,
+            });
+        }
+    
+    
+    
+    
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 19.0760, lng: 72.8777 },
+                zoom: 5
+            });
+    
+            bounds = new google.maps.LatLngBounds();
+    
+    
+            Promise.all(complaints.map(complaint =>
+                geocodeLocation(complaint.location).then(coords => {
+                    if (coords) {
+                        var latLng = new google.maps.LatLng(coords.lat, coords.lng);
+                        var weight = getWeightFromSeverity(complaint.severity);
+    
+                        heatmapData.push({ location: latLng, weight: weight });
+                        bounds.extend(latLng);
+    
+                        var marker = new google.maps.Marker({
+                            position: latLng,
+                            map: map,
+                            title: complaint.complain
+                        });
+    
+                        markers.push(marker);
+    
+                        var infoWindow = new google.maps.InfoWindow({
+                            content: `Complaint: ${complaint.complain}<br>Severity: ${complaint.severity}<br>Location: ${complaint.location}`
+                        });
+    
+                        marker.addListener('mouseover', () => infoWindow.open(map, marker));
+                        marker.addListener('mouseout', () => infoWindow.close());
+                    } else {
+                        console.warn(`Skipping location: ${complaint.location} (geocoding failed)`);
+                    }
+                })
+            ),
+    
+            incidents.map(async(incident)=> {
+                if (incident.location) {
+                    var latLng = new google.maps.LatLng(incident.location.lat, incident.location.lng);
+                    var weight = getWeightFromSeverity(incident.severity);
+                    heatmapData.push({ location: latLng, weight: weight });
+                    bounds.extend(latLng);
+                    var location = await reverseGeocodeLocation(latLng);
+                    incident.location = await location;
+    
+                    var marker = new google.maps.Marker({
+                        position: latLng,
+                        map: map,
+                        title: incident.type
+                    });
+    
+                    markers.push(marker);
+    
+                    var infoWindow = new google.maps.InfoWindow({
+                        content: `Incident: ${incident.type}<br>Severity: ${incident.severity}<br>Location: ${incident.location}`
+                    });
+    
+                    marker.addListener('mouseover', () => infoWindow.open(map, marker));
+                    marker.addListener('mouseout', () => infoWindow.close());
+                } else {
+                    console.warn(`Skipping location: ${incident.location} (geocoding failed)`);
+                }
+            }
+            )
+            ).catch(err => console.error("Error loading complaints:", err)
+            ).then(() => {
+                createHeatmap(heatmapData);
+                map.fitBounds(bounds);
+            });
+        }
+    
+        function createHeatmap(data) {
+            heatmap = new google.maps.visualization.HeatmapLayer({
+                data: data,
+                map: map
+            });
+    
+            heatmap.set('radius', 50);
+            heatmap.set('opacity', 0.7);
+            heatmap.set('dissipating', true);
+            heatmap.set('maxIntensity', 10);
+    
+            heatmap.set('gradient', [
+                'rgba(0, 255, 0, 0)',
+                'rgba(0, 255, 0, 1)',
+                'rgba(255, 255, 0, 1)',
+                'rgba(255, 165, 0, 1)',
+                'rgba(255, 0, 0, 1)'
+            ]);
+        }
+    
+        function geocodeLocation(location) {
+            return new Promise((resolve, reject) => {
+                new google.maps.Geocoder().geocode({ address: location }, (results, status) => {
+                    if (status === 'OK' && results[0]) {
+                        resolve({
+                            lat: results[0].geometry.location.lat(),
+                            lng: results[0].geometry.location.lng()
+                        });
+                    } else {
+                        console.error(`Geocoding error for location "${location}": ${status}`);
+                        resolve(null);
+                    }
+                });
+            });
+        }
+    
+        function getWeightFromSeverity(severity) {
+            return severity === 'Critical' ? 3 : severity === 'Mild' ? 2 : 1;
+        }
+        function reverseGeocodeLocation(latLng) {
+          return new Promise((resolve, reject) => {
+              new google.maps.Geocoder().geocode({ location: latLng }, (results, status) => {
+                  if (status === 'OK' && results[0]) {
+                      resolve(results[0].formatted_address);
+                  } else {
+                      console.error('Geocoding failed: ' + status);
+                      resolve('Unknown location');
+                  }
+              });
+          });
+      }
+    
+        window.onload = initMap;
+    
+        // UI Interaction
+        const elements = {
+            complaintsBtn: document.getElementById('complaintsBtn'),
+            safetyTipsBtn: document.getElementById('safetyTipsBtn'),
+            complaintsSection: document.getElementById('complaintsSection'),
+            safetyTipsSection: document.getElementById('safetyTipsSection'),
+            menTipsBtn: document.getElementById('menTipsBtn'),
+            womenTipsBtn: document.getElementById('womenTipsBtn'),
+            menTipsCards: document.getElementById('menTipsCards'),
+            womenTipsCards: document.getElementById('womenTipsCards')
+        };
+    
+        function setActiveSection(activeSection, inactiveSection) {
+            activeSection.classList.add('active');
+            inactiveSection.classList.remove('active');
+            document.getElementById(activeSection.id.replace('Btn', 'Section')).style.display = 'block';
+            document.getElementById(inactiveSection.id.replace('Btn', 'Section')).style.display = 'none';
+        }
+    
+        elements.complaintsBtn.addEventListener('click', () => setActiveSection(elements.complaintsBtn, elements.safetyTipsBtn));
+        elements.safetyTipsBtn.addEventListener('click', () => {
+            setActiveSection(elements.safetyTipsBtn, elements.complaintsBtn);
+            elements.menTipsCards.style.display = 'none';
+            elements.womenTipsCards.style.display = 'none';
+        });
+    
+        elements.menTipsBtn.addEventListener('click', () => {
+            elements.menTipsBtn.classList.add('active');
+            elements.womenTipsBtn.classList.remove('active');
+            elements.menTipsCards.style.display = 'block';
+            elements.womenTipsCards.style.display = 'none';
+        });
+    
+        elements.womenTipsBtn.addEventListener('click', () => {
+            elements.womenTipsBtn.classList.add('active');
+            elements.menTipsBtn.classList.remove('active');
+            elements.womenTipsCards.style.display = 'block';
+            elements.menTipsCards.style.display = 'none';
+        });
+    </script>
+    

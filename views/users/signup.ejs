@@ -1,0 +1,135 @@
+<% layout("/layouts/boilerplate") %>
+<style>
+  .pass {
+    display: flex;
+    align-items: center;
+  }
+  #check {
+    display: none;
+  }
+  .form-container {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+  }
+</style>
+<body>
+  <% if (errmsg && errmsg.length) { %>
+  <div class="container">
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>Message:</strong> <%= errmsg %>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+  </div>
+  <% } %>
+
+  <div class="container">
+    <h3 class="text-center mt-4"><b>SIGNUP</b></h3>
+    <div class="form-container">
+      <form
+        method="POST"
+        action="/signup"
+        novalidate
+        class="needs-validation"
+        enctype="multipart/form-data"
+      >
+        <div class="mb-3">
+          <label for="profilePicture" class="form-label"
+            ><strong>Select Profile Picture</strong></label
+          >
+          <input
+            type="file"
+            id="profilePicture"
+            name="profilePicture"
+            class="form-control"
+            accept="image/png, image/jpeg"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="username" class="form-label"
+            ><strong>Username:</strong></label
+          >
+          <input
+            id="username"
+            name="username"
+            placeholder="Enter username"
+            class="form-control"
+            required
+          />
+          <div class="invalid-feedback">Please enter Username</div>
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label"><strong>Email:</strong></label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="Enter email"
+            class="form-control"
+            required
+          />
+          <div class="invalid-feedback">Please enter Email</div>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label"
+            ><strong>Password:</strong></label
+          >
+          <div class="pass">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter password"
+              class="form-control"
+              required
+            />
+            <input type="checkbox" id="check" />
+            <label for="check"
+              ><i
+                class="fa-regular fa-eye fa-lg"
+                id="btn"
+                style="margin-left: -40px"
+              ></i
+            ></label>
+          </div>
+          <div class="invalid-feedback">Please enter Password</div>
+        </div>
+        <div class="mb-3">
+          <label for="phoneNumber" class="form-label"
+            ><strong>Phone Number:</strong></label
+          >
+          <input
+            id="phoneNumber"
+            name="phoneNumber"
+            placeholder="Enter phone number"
+            class="form-control"
+            required
+          />
+          <div class="invalid-feedback">Please enter phone number</div>
+        </div>
+        <button class="btn btn-success w-100">SIGNUP</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const check = document.querySelector("#check");
+    const inp = document.querySelector("#password");
+    const btn = document.querySelector("#btn");
+
+    check.addEventListener("change", function () {
+      if (check.checked) {
+        inp.type = "text";
+        btn.className = "fa-regular fa-eye-slash fa-lg";
+      } else {
+        inp.type = "password";
+        btn.className = "fa-regular fa-eye fa-lg";
+      }
+    });
+  </script>
+</body>

@@ -4,8 +4,20 @@
 <document_content>
 # Safy Zone 🚨
 
+<<<<<<< HEAD
 Safy Zone is a crowdsourced safety map for urban areas, designed to enhance public safety by providing real-time data on incidents and area security. Users can report incidents, view heatmaps of unsafe areas, and evaluate routes based on AI-generated safety scores. The platform also automates the escalation of critical reports to regional police stations, ensuring a swift response to public safety concerns.
 
+=======
+## Demo Video 🎥
+
+[Watch the demo video on Google Drive](https://drive.google.com/file/d/1OJ3Wib_LoI0Sv_CYLxrp0DmId4ZRjjhp/view?usp=sharing)
+
+
+Safy Zone is a crowdsourced safety map for urban areas, designed to enhance public safety by providing real-time data on incidents and area security. Users can report incidents, view heatmaps of unsafe areas, and evaluate routes based on AI-generated safety scores. The platform also automates the escalation of critical reports to regional police stations, ensuring a swift response to public safety concerns.
+
+![Safy Zone Logo](images/safy_zone_logo.jpg)
+
+>>>>>>> master
 ## Table of Contents 📖
 - [About the Project](#about-the-project)
 - [Key Features](#key-features)
@@ -31,6 +43,15 @@ The project also supports law enforcement by automatically sending detailed repo
 - *Incident Support*: Users can validate reports, improving the accuracy of incidents.
 - *Escalation to Police*: Critical reports are automatically sent to regional police stations for immediate action.
 
+<<<<<<< HEAD
+=======
+### Heatmap and Route Safety
+![Heatmap and Route Safety](images/heatmap_route_safety.jpg)
+
+### Incident Reporting and Trends
+![Incident Reporting and Trends](images/incident_reporting_trends.jpg)
+
+>>>>>>> master
 ## Tech Stack 🛠
 - *Backend*: 
   - Node.js
@@ -159,6 +180,10 @@ Contributions are welcome! Please feel free to submit a Pull Request or open an 
 
 ## Contact 📧
 If you have any questions or feedback, feel free to reach out at sachin.apwig@gmail.com.
+<<<<<<< HEAD
 </document_content>
+=======
+
+>>>>>>> master
 </document>
 </documents>

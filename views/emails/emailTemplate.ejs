@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f3f4f6;
+      margin: 0;
+      padding: 0;
+    }
+
+    .email-container {
+      max-width: 600px;
+      margin: 30px auto;
+      background-color: #ffffff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      background-color: #e14141;
+      color: #f4e3e3;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 10px 0;
+      font-size: 28px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .email-body {
+      padding: 30px;
+      text-align: left;
+      color: #333333;
+    }
+
+    .email-body h2 {
+      color: #e14141;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .email-body p {
+      font-size: 16px;
+      line-height: 1.8;
+      margin-bottom: 30px;
+    }
+
+    .footer {
+      background-color: #e14141;
+      padding: 15px;
+      font-size: 12px;
+      color: #888888;
+      text-align: center;
+    }
+
+    .footer p {
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="email-container">
+    <!-- Header -->
+    <div class="header">
+      <h1>CITY POLICE OFFICE</h1>
+    </div>
+
+    <!-- Email Body Content -->
+    <div class="email-body">
+      <h2>Complaint Submission</h2>
+      <p>Dear Sir/Madam,</p>
+      <p>
+        I am writing to formally submit a complaint regarding an incident that occurred at the following location:
+      </p>
+      <p><strong>Location:</strong> <%= location %></p>
+      <p><strong>Category:</strong> <%= category %></p>
+      <p><strong>Complaint Details:</strong> <%= complain %></p>
+       <p>I kindly request that this matter be investigated promptly. I believe that addressing this issue is crucial for ensuring the safety and well-being of our community.</p>
+      <p>Thank you for your attention to this important matter. I look forward to your prompt response.</p>
+      
+      <p>
+        I appreciate your attention to this matter and look forward to your response.
+      </p>
+      <p>Thank you.</p>
+      <p>Sincerely,<br><b>SafyZone Ltd.</b></p>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="footer">
+      <p>&copy; 2024 City Police Office. All rights reserved.</p>
+      <p>Your City Safety Partner</p>
+    </div>
+  </div>
+</body>
+
+</html>

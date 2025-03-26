@@ -1,0 +1,268 @@
+<%- layout("/layouts/boilerplate") %>
+
+<style>
+    /* Base Responsive Styles */
+    body {
+        font-size: 16px;
+    }
+
+    .show-card {
+        padding: 0 15px;
+        margin: 0 auto;
+        max-width: 1200px;
+    }
+
+    h3 {
+        text-align: center;
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        padding: 0 15px;
+    }
+
+    .listing-card {
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
+    .show-img {
+        width: 100%;
+        height: auto;
+        max-height: 400px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 15px;
+    }
+
+    /* Responsive Layout */
+    @media (max-width: 768px) {
+        .show-card {
+            padding: 0 10px;
+        }
+
+        .col-md-6, .col-md-5 {
+            width: 100%;
+            margin: 0 !important;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+        }
+
+        .card-body ul li {
+            font-size: 1rem;
+        }
+
+        .btns {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+
+    /* Existing Styles with Minor Adjustments */
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .card-body ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .card-body ul li {
+        margin-bottom: 10px;
+        color: #495057;
+        word-wrap: break-word;
+    }
+
+    /* Form Responsiveness */
+    .form-control {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    /* Button Styles */
+    .btn-width, .custom-btn {
+        width: 100%;
+        max-width: none;
+        margin: 10px 0;
+    }
+
+    /* Review Cards */
+    .custom-card {
+        margin-bottom: 15px;
+        width: 100%;
+    }
+
+    /* Flexbox for Smaller Screens */
+    @media (max-width: 992px) {
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+    }
+</style>
+
+<div class="container-fluid show-card">
+    <h3>
+        <i class="fa-solid fa-newspaper fa-lg" style="margin-right: 8px;"></i>
+        COMPLAINT DETAILS
+    </h3>
+    
+    <div class="row">
+        <div class="col-12 col-md-6 mb-4">
+            <div class="card listing-card" id="cardContent">
+                <img src="<%=complaint.imageURL.url %>" class="card-img-top show-img" alt="Complaint Image">
+                <div class="card-body">
+                    <ul>
+                        <li><strong>Description:</strong> <%= complaint.complain %></li>
+                        <li><strong>Category:</strong> <%= complaint.category %></li> 
+                        <li><strong>Location:</strong> <%= complaint.location %></li>
+                        <li><strong>Severity:</strong> <%= complaint.severity %></li>
+                        <li><strong>Date:</strong> <%= complaint.date %></li>
+                        <li><strong><%= complaint.supportCount %></strong> Expressions of Support</li>
+                    </ul>
+                </div>
+                
+                <% if (!complaint.expressusers.includes(currUser.id)) { %>
+                    <div class="card-footer text-center">
+                        <form action="/complaints/<%= complaint._id %>/support" method="POST" id="support-form">
+                            <button type="submit" class="btn btn-success btn-width">Express Support</button>
+                        </form>
+                    </div>
+                <% } %>
+                
+                <div class="text-center mt-3">
+                    <button id="downloadBtn" class="btn btn-primary">Download as PDF</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <% if(currUser) { %>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h4 class="card-title">Leave an Opinion</h4>
+                        <form method="POST" action="/complaints/<%=complaint._id%>/reviews" novalidate class="needs-validation">
+                            <div class="form-group">
+                                <label for="comment" class="form-label">Comment:</label>
+                                <input id="comment" name="review[comment]" placeholder="Enter comment" class="form-control" required />
+                                <div class="invalid-feedback">Please submit some comment</div>
+                            </div>
+                            <button type="submit" class="btn custom-btn mt-3" style="background-color: #e14141; color:white"><strong>Add Opinion</strong></button>
+                        </form>
+                    </div>
+                </div>
+            <% } %>
+
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">All Opinions</h4>
+                    <% for (review of complaint.reviews) { %>
+                        <div class="card custom-card mb-3">
+                            <div class="card-body review-body">
+                                <p class="card-text">
+                                    <strong>@<%= review.author.username %>: </strong> 
+                                    <%= review.comment %>
+                                </p>
+                            </div>
+                        </div> 
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    async function incrementSupport(complaintId) {
+        try {
+            const response = await fetch(`/complaints/${complaintId}/support`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                document.getElementById('support-count').innerText = 'Support: ' + data.supportCount;
+
+                const button = document.getElementById('support-btn');
+                button.classList.remove('btn-success');
+                button.classList.add('btn-secondary');
+                button.disabled = true;
+            } else {
+                console.error(data.message);
+            }
+        } catch (error) {
+            console.error('Error updating support:', error);
+        }
+    }
+
+    document.getElementById('downloadBtn').addEventListener('click', function () {
+    var cardContent = document.getElementById('cardContent');
+
+    var clonedCardContent = cardContent.cloneNode(true);
+
+    var pdfContainer = document.createElement('div');
+    pdfContainer.style.display = 'flex';
+    pdfContainer.style.flexDirection = 'column';
+    pdfContainer.style.justifyContent = 'space-between'; 
+    pdfContainer.style.height = '100%';
+
+    var heading = document.createElement('h1');
+    heading.innerText = 'SafyZone';
+    heading.style.color = '#e14141';
+    heading.style.textAlign = 'center';
+    heading.style.margin = '20px 0'; 
+
+    clonedCardContent.style.margin = '20px'; 
+    clonedCardContent.style.maxWidth = '100%';
+    clonedCardContent.style.boxSizing = 'border-box'; 
+
+    var footer = document.createElement('div');
+    footer.innerHTML = '<b><i>@Verified PDF generated by SafyZone</i></b>';
+    footer.style.color = '#0000ff'; 
+    footer.style.position = 'absolute';
+    footer.style.bottom = '0px'; 
+    footer.style.right = '20px'; 
+    footer.style.fontSize = '12px';
+
+    pdfContainer.appendChild(heading);  
+    pdfContainer.appendChild(clonedCardContent);
+    pdfContainer.appendChild(footer); 
+
+    clonedCardContent.style.width = '90%';
+    clonedCardContent.style.maxWidth = '90%';
+    clonedCardContent.style.position = 'relative';
+
+    var opt = {
+        margin: 0, 
+        filename: 'complaint-card.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+            scale: 3, 
+            useCORS: true,
+            logging: true,
+        },
+        jsPDF: {
+            unit: 'in',
+            format: 'letter', 
+            orientation: 'portrait' 
+        }
+    };
+
+    html2pdf().from(pdfContainer).set(opt).save();
+});
+
+</script>

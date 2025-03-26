@@ -1,0 +1,25 @@
+<% layout("/layouts/boilerplate") %>
+<style>
+    .otp {
+    width: 300px;  /* or any fixed width */
+    height: 300px; /* or any fixed height */
+    margin: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+ .otpverify{
+    display: flex;
+    gap:10px;
+ }
+</style>
+
+<div class="otp">
+<form action="/verify-otp" method="POST">
+    <label for="otp" class="form-label"><strong>Enter OTP:</strong></label>
+    <div class="otpverify">
+    <div><input type="text" id="otp" name="otp" class="form-control" required ></div>
+    <div><button type="submit">Verify OTP</button></div></div>
+  </form>
+</div>

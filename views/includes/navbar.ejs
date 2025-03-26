@@ -1,0 +1,172 @@
+<nav class="navbar navbar-expand-lg sticky-top" style="background-color: #e14141;">
+  <div class="container-fluid px-3 px-md-5">
+      <!-- Brand & Logo -->
+      <a class="navbar-brand d-flex align-items-center" href="#">
+          <i class="fa-solid fa-route fa-xl" style="color: #fff;"></i>
+          <h4 class="ms-2 text-white fw-bold mb-0 d-none d-md-block">SAFY ZONE</h4>
+          <h5 class="ms-2 text-white fw-bold mb-0 d-md-none">SAFY ZONE</h5>
+      </a>
+      <% if(currUser) { %>
+
+        <div>
+          <img src="<%= currUser.profilePicture.url %>" alt="Profile" class="rounded-circle profile-mobile me-2" width="35" height="35">
+        </div>
+        <% } %>
+
+      <!-- Toggler Button -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="navbarToggler">
+          <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+      </button>
+
+
+      <!-- Navbar Links -->
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mx-auto text-center">
+              <li class="nav-item">
+                  <a class="nav-link active text-white fw-bold" href="/complaints">
+                      <i class="fa-solid fa-home d-md-none me-2"></i>Home
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link text-white fw-bold" href="/complaints/new">
+                      <i class="fa-solid fa-plus d-md-none me-2"></i>Report
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link text-white fw-bold" href="/heatmap">
+                      <i class="fa-solid fa-map d-md-none me-2"></i>Navigate
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link text-white fw-bold" href="/trend">
+                      <i class="fa-solid fa-chart-line d-md-none me-2"></i>Trend
+                  </a>
+              </li>
+          </ul>
+          
+
+          <!-- Right-Side User Options -->
+          <div class="d-flex flex-column flex-md-row align-items-center justify-content-center">
+              <% if(!currUser) { %>
+                  <div class="d-flex flex-column flex-md-row align-items-center">
+                      <a class="nav-link text-white fw-bold me-0 me-md-2 mb-2 mb-md-0" href="/signup">
+                          <i class="fa-solid fa-user-plus d-md-none me-2"></i>SignUp
+                      </a>
+                      <a class="nav-link text-white fw-bold" href="/login">
+                          <i class="fa-solid fa-right-to-bracket d-md-none me-2"></i>Login
+                      </a>
+                  </div>
+              <% } else { %>
+                  <div class="d-flex flex-column flex-md-row align-items-center mb-2 mb-md-0">
+                      <div class="d-flex align-items-center me-0 me-md-3 mb-2 mb-md-0">
+                          <img src="<%= currUser.profilePicture.url %>" alt="Profile" class="rounded-circle profile me-2" width="35" height="35">
+                          
+                      </div>
+                      <a class="nav-link text-white fw-bold" href="/logout">
+                          <i class="fa-solid fa-right-from-bracket d-md-none me-2"></i>LogOut
+                      </a>
+                  </div>
+              <% } %>
+          </div>
+      </div>
+  </div>
+</nav>
+
+<style>
+    /* Additional responsive styles */
+    .profile-mobile{
+      display: none;
+    }
+    @media (max-width: 1024px) {
+        .navbar-collapse {
+            position: fixed;
+            top: 9vh; /* Adjust based on navbar height */
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e14141;
+            z-index: 1000;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            display: none;
+            height: 50vh;
+        }
+        .profile-mobile{
+          display: block;
+          position: relative;
+          right: -15vh;
+        }
+        .navbar-collapse.show {
+            display: block;
+        }
+
+        .navbar-nav {
+            flex-direction: column;
+            align-items: center;
+            padding-top: 5px;
+        }
+
+        .nav-item {
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-link {
+            font-size: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container-fluid {
+          padding-left: 10px !important;
+          padding-right: 10px !important;
+      }
+      .profile{
+        display: none;
+      }
+    }
+    
+
+    
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const navbarToggler = document.getElementById('navbarToggler');
+    const navbarCollapse = document.getElementById('navbarSupportedContent');
+
+    // Improved mobile menu toggle
+    navbarToggler.addEventListener('click', function() {
+        navbarCollapse.classList.toggle('show');
+        this.setAttribute('aria-expanded', 
+            this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true'
+        );
+    });
+
+    // Close navbar when a link is clicked on mobile
+    const navLinks = navbarCollapse.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth < 768) {
+                navbarCollapse.classList.remove('show');
+                navbarToggler.setAttribute('aria-expanded', 'false');
+            }
+        });
+    });
+
+    // Optional: Close navbar when clicking outside
+    document.addEventListener("click", function (event) {
+        if (window.innerWidth < 1024) {
+            if (!navbarCollapse.contains(event.target) && 
+                !navbarToggler.contains(event.target) && 
+                navbarCollapse.classList.contains("show")) {
+                navbarCollapse.classList.remove("show");
+                navbarToggler.setAttribute("aria-expanded", "false");
+            }
+        }
+    });
+});
+</script>
